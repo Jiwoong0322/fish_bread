@@ -11,10 +11,18 @@ stock = { # key값을 이용해서 value, 딕셔너리를 써야하는 상황은
 
 sales = {
     "팥붕어빵": 0,
-    "슈크림붕어어빵": 0,
+    "슈크림붕어빵": 0,
     "초코붕어빵": 0,
     "피자붕어빵": 0,
     "김치붕어빵": 0
+}
+
+price = {
+    "팥붕어빵": 1000,
+    "슈크림붕어빵": 1200,
+    "초코붕어빵": 1100,
+    "피자붕어빵": 1500,
+    "김치붕어빵": 1300
 }
 
 def order_bread():
@@ -22,8 +30,8 @@ def order_bread():
         bread_type = input("주문할 붕어빵을 선택하세요.\n팥붕어빵\n슈크림붕어빵\n초코붕어빵\n피자붕어빵\n김치붕어빵\n만약 뒤로가기를 원하신다면 '뒤로가기'를 입력해주세요\n")
         if bread_type in stock: #"팥붕어빵" or "슈크림붕어빵" or "초코붕어빵" or "피자붕어빵" or "김치붕어빵":
             print(f"현재 {bread_type}의 재고는 {stock[bread_type]}개입니다.\n")
-            order = input("주문하시겠습니까? Y/N\n")
-            if order == "Y":
+            order = input("주문하시겠습니까? 예/아니오\n")
+            if order == "예":
                 bread_count = int(input("주문하실 수량을 입력하여주십시오\n"))
                 if bread_count <= stock[bread_type]:
                     stock[bread_type] -= bread_count
@@ -31,7 +39,7 @@ def order_bread():
                     print(f"{bread_type} {bread_count}개를 주문하셨습니다. 감사합니다!\n")
                 else:
                     print("재고가 부족합니다. 다시 시도해주세요\n")
-            elif order == "N":
+            elif order == "아니오":
                 print("이전 화면으로 돌아갑니다.\n")
             else:
                 print("잘못된 입력입니다.\n")
@@ -50,25 +58,36 @@ def admin_mode():
             bread_type = input("발주를 넣을 붕어빵 맛을 입력해주세요.\n팥붕어빵\n슈크림붕어빵\n초코붕어빵\n피자붕어빵\n김치붕어빵\n")
             if bread_type in stock:
                 print(f"현재 {bread_type}의 재고는 {stock[bread_type]}개입니다.\n")
-                order = input(f"{bread_type}의 발주를 진행하시겠습니까? Y/N\n")
-                if order == "Y":
-                    try:
-                        bread_count = int(input("발주할 수량을 입력하여주십시오.(발주 취소를 원하시면 0을 입력하여주십시오.)\n"))
-                        if bread_count > 0:
-                            stock[bread_type] += bread_count
-                            print(f"{bread_type} {bread_count}개의 발주를 완료하였습니다.\n")
-                        elif bread_count == 0:
-                            print("발주가 취소되었습니다.\n")
-                        else:
-                            print("정수를 입력하여주십시오.\n")
-                    except ValueError:
-                        print("정수를 입력하여주십시오. 발주가 취소되었습니다.\n")
-                elif order == "N":
+                order = input(f"{bread_type}의 발주를 진행하시겠습니까? 예/아니오\n")
+                if order == "예":
+                    goods = False
+                    while goods == False:
+                        try:
+                            bread_count = int(input("발주할 수량을 입력하여주십시오.(발주 취소를 원하시면 0을 입력하여주십시오.)\n"))
+                            if bread_count > 0:
+                                stock[bread_type] += bread_count
+                                print(f"{bread_type} {bread_count}개의 발주를 완료하였습니다.\n")
+                                goods = True
+                            elif bread_count == 0:
+                                print("발주가 취소되었습니다.\n")
+                                goods = True
+                            else:
+                                print("0이상의 정수를 입력하여주십시오.\n")
+                                goods = False
+                        except ValueError:
+                            print("올바른 값이 아닙니다.\n")
+                            goods = False
+                elif order == "아니오" or order == "뒤로가기":
                     print("이전 화면으로 돌아갑니다.\n")
+                elif order == "종료":
+                    print("관리자 모드를 종료합니다.\n")
+                    break
                 else:
                     print("잘못된 입력입니다.\n")
-            elif bread_type == "뒤로가기" or bread_type == "종료":
+            elif bread_type == "뒤로가기":
                 print("이전 화면으로 돌아갑니다\n")
+            elif bread_type == "종료":
+                print("관리자 모드를 종료합니다.\n")
                 break
             else:
                 print("잘못된 입력입니다.\n")
@@ -76,16 +95,27 @@ def admin_mode():
             print("현재 붕어빵 재고 현황입니다.\n")
             for bread, count in stock.items():
                 print(f"{bread}: {count}개")
+        elif admin == "뒤로가기":
+            print("맨 처음 화면입니다.\n")
+        elif admin == "종료":
+            print("관리자 모드를 종료합니다.\n")
+            break
         else:
             print("정확한 모드를 입력하여주십시오.\n")
+
+def calculate_sales():
+    total = 0
+    for key in sales:
+        total += (sales[key] * price[key])
+    print(f"오늘의 총 매출은 {total}원 입니다.\n")
 
 while True:
     mode = input("원하는 모드를 선택하세요(주문, 관리자, 종료): ")
     if mode == "종료":
+        calculate_sales()
+        print("시스템이 종료되었습니다.")
         break
     elif mode == "관리자":
         admin_mode()
     elif mode == "주문":
         order_bread()
-
-print("시스템이 종료되었습니다.")
