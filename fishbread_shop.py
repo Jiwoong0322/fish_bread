@@ -76,7 +76,8 @@ def admin_mode():
             print("현재 붕어빵 재고 현황입니다.\n")
             for bread, count in stock.items():
                 print(f"{bread}: {count}개")
-
+        else:
+            print("정확한 모드를 입력하여주십시오.\n")
 
 while True:
     mode = input("원하는 모드를 선택하세요(주문, 관리자, 종료): ")
