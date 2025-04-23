@@ -24,7 +24,7 @@ def order_bread():
             print(f"현재 {bread_type}의 재고는 {stock[bread_type]}개입니다.\n")
             order = input("주문하시겠습니까? Y/N\n")
             if order == "Y":
-                bread_count = int(input("수량을 입력하여주십시오\n"))
+                bread_count = int(input("주문하실 수량을 입력하여주십시오\n"))
                 if bread_count <= stock[bread_type]:
                     stock[bread_type] -= bread_count
                     sales[bread_type] += bread_count
@@ -41,6 +41,41 @@ def order_bread():
         else:
             print("잘못된 입력입니다.\n")
             break
+
+def admin_mode():
+    print("작업 중 관리자 모드를 종료하고 싶으시면 '종료' 이전 화면으로 돌아가고 싶으시다면 '뒤로가기'를 입력해주세요.")
+    while True:
+        admin = input("실행할 모드를 입력하여 주십시오.\n발주\n재고 확인\n")
+        if admin == "발주":
+            bread_type = input("발주를 넣을 붕어빵 맛을 입력해주세요.\n팥붕어빵\n슈크림붕어빵\n초코붕어빵\n피자붕어빵\n김치붕어빵\n")
+            if bread_type in stock:
+                print(f"현재 {bread_type}의 재고는 {stock[bread_type]}개입니다.\n")
+                order = input(f"{bread_type}의 발주를 진행하시겠습니까? Y/N\n")
+                if order == "Y":
+                    try:
+                        bread_count = int(input("발주할 수량을 입력하여주십시오.(발주 취소를 원하시면 0을 입력하여주십시오.)\n"))
+                        if bread_count > 0:
+                            stock[bread_type] += bread_count
+                            print(f"{bread_type} {bread_count}개의 발주를 완료하였습니다.\n")
+                        elif bread_count == 0:
+                            print("발주가 취소되었습니다.\n")
+                        else:
+                            print("정수를 입력하여주십시오.\n")
+                    except ValueError:
+                        print("정수를 입력하여주십시오. 발주가 취소되었습니다.\n")
+                elif order == "N":
+                    print("이전 화면으로 돌아갑니다.\n")
+                else:
+                    print("잘못된 입력입니다.\n")
+            elif bread_type == "뒤로가기" or bread_type == "종료":
+                print("이전 화면으로 돌아갑니다\n")
+                break
+            else:
+                print("잘못된 입력입니다.\n")
+        elif admin == "재고 확인" or admin == "재고확인":
+            print("현재 붕어빵 재고 현황입니다.\n")
+            for bread, count in stock.items():
+                print(f"{bread}: {count}개")
 
 
 while True:
