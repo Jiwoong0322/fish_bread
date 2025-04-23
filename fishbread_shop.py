@@ -108,6 +108,7 @@ def calculate_sales():
     for key in sales:
         total += (sales[key] * price[key])
     print(f"오늘의 총 매출은 {total}원 입니다.\n")
+    print(f"오늘은 붕어빵을 총 {sales}개 팔았습니다.\n")
 
 while True:
     mode = input("원하는 모드를 선택하세요(주문, 관리자, 종료): ")
